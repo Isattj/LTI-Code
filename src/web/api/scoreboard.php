@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../db/example_database.php';
 
 use \IMSGlobal\LTI;
 $launch = LTI\LTI_Message_Launch::from_cache($_REQUEST['launch_id'], new Example_Database());
+
 if (!$launch->has_nrps()) {
     throw new Exception("Don't have names and roles!");
 }
@@ -46,5 +47,15 @@ foreach ($scores as $score) {
     }
     $scoreboard[] = $result;
 }
-echo json_encode($scoreboard);
+
+$scoreboards = [];
+
+$scoreboards["all"] = [
+    'name' => 'All',
+    'id' => 'all',
+    'scoreboard' => $scoreboard,
+];
+
+
+echo json_encode($scoreboards);
 ?>
