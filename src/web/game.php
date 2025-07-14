@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ALL & ~E_DEPRECATED);
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../db/example_database.php';
 
@@ -38,9 +39,8 @@ if ($launch->is_deep_link_launch()) {
     </div>
 </div>
 <script>
-    // Set game difficulty if it has been set in deep linking
-    var curr_diff = "<?= $launch->get_launch_data()['https://purl.imsglobal.org/spec/lti/claim/custom']['difficulty'] ?: 'normal'; ?>";
-    var curr_user_name = "<?= $launch->get_launch_data()['name']; ?>";
+    var curr_diff = "<?= isset($launch->get_launch_data()['https://purl.imsglobal.org/spec/lti/claim/custom']['difficulty']) ? $launch->get_launch_data()['https://purl.imsglobal.org/spec/lti/claim/custom']['difficulty'] : 'normal'; ?>";
+    var curr_user_name = "<?= isset($launch->get_launch_data()['name']) ? $launch->get_launch_data()['name'] : 'Visitante'; ?>";
     var launch_id = "<?= $launch->get_launch_id(); ?>";
 </script>
 <script type="text/javascript" src="static/breakout.js" charset="utf-8"></script>
