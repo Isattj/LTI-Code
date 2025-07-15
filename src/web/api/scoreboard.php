@@ -6,7 +6,8 @@ use \IMSGlobal\LTI;
 $launch = LTI\LTI_Message_Launch::from_cache($_REQUEST['launch_id'], new Example_Database());
 
 if (!$launch->has_nrps()) {
-    throw new Exception("Don't have names and roles!");
+    echo json_encode(["error" => "Don't have names and roles!"]);
+    exit;
 }
 if (!$launch->has_ags()) {
     throw new Exception("Don't have grades!");
@@ -55,7 +56,6 @@ $scoreboards["all"] = [
     'id' => 'all',
     'scoreboard' => $scoreboard,
 ];
-
 
 echo json_encode($scoreboards);
 ?>
