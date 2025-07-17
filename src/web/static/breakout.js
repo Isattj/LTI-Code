@@ -391,7 +391,6 @@ pause = true;
 gameover = false;
 
 var frame = function() {
-    document.getElementById("user-score").innerText = "Score: " + window.score + " | Time: " + (start_time ? Math.floor(Date.now() / 1000) - start_time : 0) + "s";
     if (window.score >= window.bricks.length) {
         endGame();
     }
@@ -434,30 +433,25 @@ document.fonts.load('50px Gugi').then(frame);
 var endGame = function() {
     window.pause = true;
     window.gameover = true;
-
-    if(!window.game_recorder.recording_data_loaded()){
-        window.submitScore();
-    }
+    window.submitScore();
 }
 
-function refreshScoreBoard(event) {
-    var data = JSON.parse(event.target.responseText);
-    var scoreboard = data.all.scoreboard;
-    var html = "<table><tr><th>Nome</th><th>Score</th><th>Tempo</th></tr>";
-    scoreboard.forEach(function(row) {
-        html += "<tr><td>" + row.name + "</td><td>" + row.score + "</td><td>" + row.time + "</td></tr>";
-    });
-    html += "</table>";
-    document.getElementById("scoreboard-table").innerHTML = html;
+var refreshScoreBoard = function() {
+    var scores = JSON.parse(this.responseText);
+    console.log(scores);
+    var output = '<tr><th>Score</th><th>Time</th><th>Name</th></tr>';
+    for (var i = 0; i < scores.length; i++) {
+        output += '<tr><td>' + scores[i].score + '</td><td>' + scores[i].time + 's</td><td>' + scores[i].name + '</td></tr>';
+    }
+    document.getElementById("leadertable").innerHTML = output;
 }
 
 var submitScore = function() {
     var time_taken = Math.floor(Date.now() / 1000) - start_time;
     var xhttp = new XMLHttpRequest();
     xhttp.addEventListener("load", getScoreBoard);
-    xhttp.open("POST", "api/score.php", false);
-    xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhttp.send("launch_id=" + launch_id + "&score=" + window.score + "&time=" + time_taken + "&comment=" + window.game_recorder.recording_data);
+    xhttp.open("GET", "api/score.php?launch_id=" + launch_id + "&score=" + window.score + "&time=" + time_taken, false);
+    xhttp.send();
 }
 
 var getScoreBoard = function() {
@@ -467,5 +461,4 @@ var getScoreBoard = function() {
     xhttp.send();
 }
 
-setInterval(getScoreBoard, 5000);
 getScoreBoard();

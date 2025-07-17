@@ -29,8 +29,7 @@ if ($launch->is_deep_link_launch()) {
     <div style="position:absolute;width:1000px;margin-left:-500px;left:50%; display:block">
         <div id="scoreboard" style="position:absolute; right:0; width:200px; height:486px">
             <h2 style="margin-left:12px;">Scoreboard</h2>
-            <div id="user-score" style="position:absolute;left:20px;top:50px;color:white;font-size:24px;"></div>
-            <table id="scoreboard-table" style="margin-left:12px;">
+            <table id="leadertable" style="margin-left:12px;">
             </table>
         </div>
         <canvas id="breakoutbg" width="800" height="500" style="position:absolute;left:0;border:0;">

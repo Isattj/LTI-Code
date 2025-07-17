@@ -19,14 +19,16 @@ $score_lineitem = LTI\LTI_Lineitem::new()
     ->set_score_maximum(100)
     ->set_label('Score')
     ->set_resource_id($launch->get_launch_data()['https://purl.imsglobal.org/spec/lti/claim/resource_link']['id']);
-$scores = $ags->get_grades($score_lineitem);
+$created_score_lineitem = $ags->put_lineitem($score_lineitem);
+$scores = $ags->get_grades($created_score_lineitem);
 
 $time_lineitem = LTI\LTI_Lineitem::new()
     ->set_tag('time')
     ->set_score_maximum(999)
     ->set_label('Time Taken')
     ->set_resource_id('time'.$launch->get_launch_data()['https://purl.imsglobal.org/spec/lti/claim/resource_link']['id']);
-$times = $ags->get_grades($time_lineitem);
+$created_time_lineitem = $ags->put_lineitem($time_lineitem);
+$times = $ags->get_grades($created_time_lineitem);
 
 $members = $launch->get_nrps()->get_members();
 
