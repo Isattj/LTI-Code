@@ -4,10 +4,8 @@ require_once __DIR__ . '/../../db/example_database.php';
 
 use \IMSGlobal\LTI;
 $launch = LTI\LTI_Message_Launch::from_cache($_REQUEST['launch_id'], new Example_Database());
-
 if (!$launch->has_nrps()) {
-    echo json_encode(["error" => "Don't have names and roles!"]);
-    exit;
+    throw new Exception("Don't have names and roles!");
 }
 if (!$launch->has_ags()) {
     throw new Exception("Don't have grades!");
@@ -19,16 +17,14 @@ $score_lineitem = LTI\LTI_Lineitem::new()
     ->set_score_maximum(100)
     ->set_label('Score')
     ->set_resource_id($launch->get_launch_data()['https://purl.imsglobal.org/spec/lti/claim/resource_link']['id']);
-$created_score_lineitem = $ags->put_lineitem($score_lineitem);
-$scores = $ags->get_grades($created_score_lineitem);
+$scores = $ags->get_grades($score_lineitem);
 
 $time_lineitem = LTI\LTI_Lineitem::new()
     ->set_tag('time')
     ->set_score_maximum(999)
     ->set_label('Time Taken')
     ->set_resource_id('time'.$launch->get_launch_data()['https://purl.imsglobal.org/spec/lti/claim/resource_link']['id']);
-$created_time_lineitem = $ags->put_lineitem($time_lineitem);
-$times = $ags->get_grades($created_time_lineitem);
+$times = $ags->get_grades($time_lineitem);
 
 $members = $launch->get_nrps()->get_members();
 
@@ -50,14 +46,5 @@ foreach ($scores as $score) {
     }
     $scoreboard[] = $result;
 }
-
-$scoreboards = [];
-
-$scoreboards["all"] = [
-    'name' => 'All',
-    'id' => 'all',
-    'scoreboard' => $scoreboard,
-];
-
-echo json_encode($scoreboards);
+echo json_encode($scoreboard);
 ?>

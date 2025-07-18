@@ -5,6 +5,6 @@ services:
     command: /bin/sh -c "cd /srv/app && php /bin/composer.phar install && php /bin/composer.phar update && apache2-foreground"
     image: breakout-docker
     ports:
-      - ${BREAKOUT_PORT:-9090}:80
+      - ${BREAKOUT_PORT:-9001}:80
     volumes:
       - ./src:/srv/app
